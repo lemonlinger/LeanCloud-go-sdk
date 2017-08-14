@@ -20,7 +20,7 @@ type File struct {
 	MetaData map[string]interface{} `json:"metaData,omitempty"`
 }
 
-func (this *leanClient) UploadPlainText(fileName, content string) (*File, error) {
+func (this *LeanClient) UploadPlainText(fileName, content string) (*File, error) {
 	url := UrlBase + "/files/" + fileName
 	request := gorequest.New()
 	superAgent := request.Post(url).
@@ -46,7 +46,7 @@ func (this *leanClient) UploadPlainText(fileName, content string) (*File, error)
 }
 
 //content-type can be text/plain,image/*, or empty
-func (this *leanClient) UploadFile(fileName, contentType string, file *os.File) (*File, error) {
+func (this *LeanClient) UploadFile(fileName, contentType string, file *os.File) (*File, error) {
 	//as gorequest doesn't have a good support for binary request, so I have to make the request by native http.request api,this is bad
 	url := UrlBase + "/files/" + fileName
 

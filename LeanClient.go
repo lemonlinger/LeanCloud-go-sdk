@@ -1,6 +1,6 @@
 package lean
 
-type leanClient struct {
+type LeanClient struct {
 	appId, appKey, masterKey string
 	useSign                  bool
 	Installation, User, Role *Collection
@@ -10,9 +10,9 @@ type leanClient struct {
 //create a new lean client.
 //You only need one client in a go application
 //application will not check your keys if you don't call API that needs it
-func NewClient(appId, appKey, masterKey string) *leanClient {
+func NewClient(appId, appKey, masterKey string) *LeanClient {
 
-	ret := &leanClient{
+	ret := &LeanClient{
 		appId:     appId,
 		appKey:    appKey,
 		masterKey: masterKey,

@@ -5,12 +5,12 @@ import (
 )
 
 type Collection struct {
-	client      *leanClient
+	client      *LeanClient
 	class       string
 	classSubfix string
 }
 
-func (this *leanClient) Collection(collection string) Collection {
+func (this *LeanClient) Collection(collection string) Collection {
 	return Collection{
 		client:      this,
 		class:       collection,

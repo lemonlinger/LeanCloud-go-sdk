@@ -19,7 +19,7 @@ type User struct {
 }
 
 //will return nil if there are any error
-func (this *leanClient) Login(userName, pwd string) (*User, error) {
+func (this *LeanClient) Login(userName, pwd string) (*User, error) {
 	requestBody := map[string]string{
 		"username": userName,
 		"password": pwd,
@@ -43,7 +43,7 @@ func (this *leanClient) Login(userName, pwd string) (*User, error) {
 }
 
 //will return nil if there are any error
-func (this *leanClient) UserMe(token string) (*User, error) {
+func (this *LeanClient) UserMe(token string) (*User, error) {
 	url := UrlBase + "/users/me"
 	request := gorequest.New()
 	superAgent := request.Get(url)
@@ -61,4 +61,26 @@ func (this *leanClient) UserMe(token string) (*User, error) {
 		return nil, err
 	}
 	return ret, nil
+}
+
+func (this *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, error) {
+	url := UrlBase + "/usersByMobilePhone"
+	requestBody := map[string]string{
+		"mobilePhoneNumber": mobilePhone,
+		"smsCode":           smsCode,
+	}
+	request := gorequest.New()
+	superAgent := request.Post(url).Send(requestBody)
+	agent := &Agent{
+		superAgent: superAgent,
+		client:     this,
+	}
+	if err := agent.Do(); err != nil {
+		return nil, err
+	}
+	user := &User{}
+	if err := agent.ScanResponse(user); nil != err {
+		return nil, err
+	}
+	return user, nil
 }
