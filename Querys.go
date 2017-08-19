@@ -1,4 +1,4 @@
-package query
+package lean
 
 import (
 	"encoding/json"

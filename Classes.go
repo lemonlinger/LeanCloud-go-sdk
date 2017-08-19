@@ -19,11 +19,13 @@ func (this *LeanClient) Collection(collection string) Collection {
 }
 
 //create an object
-func (this Collection) Create(obj interface{}) *Agent {
+func (this Collection) Create(obj interface{}, fetchWhenSave bool) *Agent {
 	request := gorequest.New()
 	classesUrl := UrlBase + this.classSubfix
-	superAgent := request.Post(classesUrl).
-		Send(obj)
+	if fetchWhenSave {
+		classesUrl += "?fetchWhenSave=true"
+	}
+	superAgent := request.Post(classesUrl).Send(obj)
 	return &Agent{
 		superAgent: superAgent,
 		client:     this.client,

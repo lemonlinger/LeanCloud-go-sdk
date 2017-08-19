@@ -1,4 +1,4 @@
-package update
+package lean
 
 import (
 	"encoding/json"

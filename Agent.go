@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/johnzeng/leancloud-go-sdk/query"
-	"github.com/parnurzeal/gorequest"
 	"time"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 type Agent struct {
@@ -44,7 +44,7 @@ func (this *QueryAgent) WithCount() *QueryAgent {
 	return this
 }
 
-func (this *QueryAgent) WithQuery(q *query.Query) *QueryAgent {
+func (this *QueryAgent) WithQuery(q *Query) *QueryAgent {
 	this.superAgent.QueryData.Add("where", q.String())
 	return this
 }

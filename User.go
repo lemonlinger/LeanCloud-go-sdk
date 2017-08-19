@@ -7,7 +7,7 @@ import (
 //be attention that EmailVerified and MobilePhoneVerified can be nil
 type User struct {
 	LeanClassesBase
-	Salt                string                 `json:"salt,omitemptyy"`
+	Salt                string                 `json:"salt,omitempty"`
 	Email               string                 `json:"email, omitempty"`
 	SessionToken        string                 `json:"sessionToken, omitempty"`
 	Passowrd            string                 `json:"password,omitempty"`
@@ -19,7 +19,7 @@ type User struct {
 }
 
 //will return nil if there are any error
-func (this *LeanClient) Login(userName, pwd string) (*User, error) {
+func (c *LeanClient) Login(userName, pwd string) (*User, error) {
 	requestBody := map[string]string{
 		"username": userName,
 		"password": pwd,
@@ -30,7 +30,7 @@ func (this *LeanClient) Login(userName, pwd string) (*User, error) {
 		Send(requestBody)
 	agent := &Agent{
 		superAgent: superAgent,
-		client:     this,
+		client:     c,
 	}
 	if err := agent.Do(); nil != err {
 		return nil, err
@@ -43,13 +43,13 @@ func (this *LeanClient) Login(userName, pwd string) (*User, error) {
 }
 
 //will return nil if there are any error
-func (this *LeanClient) UserMe(token string) (*User, error) {
+func (c *LeanClient) UserMe(token string) (*User, error) {
 	url := UrlBase + "/users/me"
 	request := gorequest.New()
 	superAgent := request.Get(url)
 	agent := &Agent{
 		superAgent: superAgent,
-		client:     this,
+		client:     c,
 	}
 	agent.UseSessionToken(token)
 
@@ -63,7 +63,7 @@ func (this *LeanClient) UserMe(token string) (*User, error) {
 	return ret, nil
 }
 
-func (this *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, error) {
+func (c *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, error) {
 	url := UrlBase + "/usersByMobilePhone"
 	requestBody := map[string]string{
 		"mobilePhoneNumber": mobilePhone,
@@ -73,7 +73,7 @@ func (this *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, 
 	superAgent := request.Post(url).Send(requestBody)
 	agent := &Agent{
 		superAgent: superAgent,
-		client:     this,
+		client:     c,
 	}
 	if err := agent.Do(); err != nil {
 		return nil, err
@@ -83,4 +83,32 @@ func (this *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, 
 		return nil, err
 	}
 	return user, nil
+}
+
+func (c *LeanClient) UpdateUser(u User) error {
+	url := UrlBase + "/users/" + u.ObjectId
+	requestBody := make(map[string]string)
+	if u.Passowrd != "" {
+		requestBody["password"] = u.Passowrd
+	}
+	if u.MobilePhoneNumber != "" {
+		requestBody["phone"] = u.MobilePhoneNumber
+	}
+	if u.Username != "" {
+		requestBody["username"] = u.Username
+	}
+	if u.Email != "" {
+		requestBody["email"] = u.Email
+	}
+	if len(requestBody) == 0 {
+		return nil
+	}
+	request := gorequest.New()
+	superAgent := request.Put(url).Send(requestBody)
+	agent := &Agent{
+		superAgent: superAgent,
+		client:     c,
+	}
+	agent.UseSessionToken(u.SessionToken)
+	return agent.Do()
 }

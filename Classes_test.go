@@ -1,8 +1,8 @@
 package lean
 
 import (
-	"github.com/johnzeng/leancloud-go-sdk/query"
-	"github.com/johnzeng/leancloud-go-sdk/update"
+	"github.com/lemonlinger/Leancloud-go-sdk/query"
+	"github.com/lemonlinger/Leancloud-go-sdk/update"
 	"os"
 	"testing"
 	"time"
