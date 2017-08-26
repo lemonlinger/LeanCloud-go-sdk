@@ -8,6 +8,14 @@ type Query struct {
 	query map[string]interface{}
 }
 
+func (this Query) MarshalJSON() ([]byte, error) {
+	return json.Marshal(this.query)
+}
+
+func (this Query) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, &this.query)
+}
+
 func (this Query) String() string {
 	if str, err := json.Marshal(this.query); nil != err {
 		return ""
@@ -17,23 +25,17 @@ func (this Query) String() string {
 }
 
 func And(query ...Query) *Query {
-	var ret map[string]interface{}
-	for i := range query {
-		q := query[i].query
-		for key, value := range q {
-			ret[key] = value
-		}
+	ret := map[string]interface{}{
+		"$and": query,
 	}
-
-	return &Query{ret}
+	return &Query{query: ret}
 }
 
 func Or(query ...Query) *Query {
-	ret := map[string](interface{}){
+	ret := map[string]interface{}{
 		"$or": query,
 	}
-	return &Query{ret}
-
+	return &Query{query: ret}
 }
 
 func compare(key, cmp string, value interface{}) *Query {
@@ -42,11 +44,11 @@ func compare(key, cmp string, value interface{}) *Query {
 			cmp: value,
 		},
 	}
-	return &Query{ret}
+	return &Query{query: ret}
 }
 
 func Eq(key string, value interface{}) *Query {
-	return &Query{map[string]interface{}{key: value}}
+	return compare(key, "$eq", value)
 }
 
 func Lt(key string, value interface{}) *Query {

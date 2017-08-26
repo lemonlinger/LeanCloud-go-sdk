@@ -71,7 +71,6 @@ func (this *QueryAgent) Order(s string) *QueryAgent {
 
 func (this *Agent) ScanResponse(ret interface{}) error {
 	if err := json.Unmarshal([]byte(this.body), ret); nil != err {
-		println(this.body)
 		return err
 	}
 	return nil
@@ -109,10 +108,6 @@ func (this *Agent) Do() error {
 		return errors.New(body)
 	}
 	if len(err) != 0 {
-		for i := range err {
-			println(err[i].Error())
-		}
-		println("response bod:" + body)
 		return err[0]
 	}
 	return nil
