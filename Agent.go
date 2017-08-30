@@ -102,14 +102,13 @@ func (this *Agent) Do() error {
 			Set("X-LC-Key", this.client.appKey)
 	}
 	resp, body, err := this.superAgent.End()
-	this.body = body
-
-	if resp.StatusCode >= 400 {
-		return errors.New(body)
-	}
 	if len(err) != 0 {
 		return err[0]
 	}
+	if resp.StatusCode >= 400 {
+		return errors.New(body)
+	}
+	this.body = body
 	return nil
 }
 
