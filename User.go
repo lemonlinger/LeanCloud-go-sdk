@@ -63,6 +63,25 @@ func (c *LeanClient) UserMe(token string) (*User, error) {
 	return ret, nil
 }
 
+func (c *LeanClient) UserMeAll(token string, userWrapper interface{}) error {
+	url := UrlBase + "/users/me"
+	request := gorequest.New()
+	superAgent := request.Get(url)
+	agent := &Agent{
+		superAgent: superAgent,
+		client:     c,
+	}
+	agent.UseSessionToken(token)
+
+	if err := agent.Do(); nil != err {
+		return err
+	}
+	if err := agent.ScanResponse(userWrapper); nil != err {
+		return err
+	}
+	return nil
+}
+
 func (c *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, error) {
 	url := UrlBase + "/usersByMobilePhone"
 	requestBody := map[string]string{
