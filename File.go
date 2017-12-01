@@ -2,10 +2,11 @@ package lean
 
 import (
 	"encoding/json"
-	"github.com/parnurzeal/gorequest"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 //be attention that EmailVerified and MobilePhoneVerified can be nil
@@ -21,7 +22,7 @@ type File struct {
 }
 
 func (this *LeanClient) UploadPlainText(fileName, content string) (*File, error) {
-	url := UrlBase + "/files/" + fileName
+	url := GetUrlBase() + "/files/" + fileName
 	request := gorequest.New()
 	superAgent := request.Post(url).
 		Send(content)
@@ -48,7 +49,7 @@ func (this *LeanClient) UploadPlainText(fileName, content string) (*File, error)
 //content-type can be text/plain,image/*, or empty
 func (this *LeanClient) UploadFile(fileName, contentType string, file *os.File) (*File, error) {
 	//as gorequest doesn't have a good support for binary request, so I have to make the request by native http.request api,this is bad
-	url := UrlBase + "/files/" + fileName
+	url := GetUrlBase() + "/files/" + fileName
 
 	if "" != contentType {
 		contentType = "application/json"

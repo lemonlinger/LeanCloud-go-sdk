@@ -1,8 +1,6 @@
 package lean
 
 import (
-	"github.com/lemonlinger/Leancloud-go-sdk/query"
-	"github.com/lemonlinger/Leancloud-go-sdk/update"
 	"os"
 	"testing"
 	"time"
@@ -56,7 +54,7 @@ func TestCreateObject(t *testing.T) {
 			notUpload: "nono",
 			Ignore:    "ignore",
 			TestDate:  &now,
-		})
+		}, false)
 
 	if err := agent.Do(); nil != err {
 		t.Error(err.Error())
@@ -77,7 +75,7 @@ func TestClassQuery(t *testing.T) {
 		os.Getenv("LEAN_APPKEY"),
 		os.Getenv("LEAN_MASTERKEY"))
 	agent := client.Collection("test").Query()
-	q := query.Eq("hi", "this is first message")
+	q := Eq("hi", "this is first message")
 	agent.WithQuery(q).Limit(1)
 	agent.Do()
 	ret := TestResp{}
@@ -128,8 +126,8 @@ func TestClassUpdateByPart(t *testing.T) {
 		os.Getenv("LEAN_APPKEY"),
 		os.Getenv("LEAN_MASTERKEY"))
 
-	addObj := update.AddToArray("ss", "123", "456")
-	updateObj := update.AddRelation("user", LeanPointer{class: "_user", objectId: userId}).And(addObj)
+	addObj := AddToArray("ss", "123", "456")
+	updateObj := AddRelation("user", LeanPointer{class: "_user", objectId: userId}).And(addObj)
 
 	agent := client.Collection("test").UpdateObjectById(id, updateObj)
 	//if you don't wanna update by master key, you need to specify the id in update object body
@@ -145,7 +143,7 @@ func TestClassScan(t *testing.T) {
 		os.Getenv("LEAN_APPKEY"),
 		os.Getenv("LEAN_MASTERKEY"))
 	agent := client.Collection("test").Scan("", "")
-	q := query.Eq("hi", "this is first message")
+	q := Eq("hi", "this is first message")
 	agent.WithQuery(q).Limit(1)
 	agent.Do()
 	ret := TestResp{}

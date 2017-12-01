@@ -1,5 +1,19 @@
 package lean
 
+import (
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+)
+
+const (
+	ApiVersion = "1.1"
+)
+
+var (
+	apiServer = "api.leancloud.cn"
+)
+
 type LeanClient struct {
 	appId, appKey, masterKey string
 	useSign                  bool
@@ -34,12 +48,38 @@ func NewClient(appId, appKey, masterKey string) *LeanClient {
 	ret.File = &(file)
 	ret.File.classSubfix = "/files"
 
+	if s, err := DetectDedicatedApiServer(appId); err != nil {
+		apiServer = s
+	}
 	return ret
 }
 
-const (
-	//v1.1 api classes url base
-	//all url will not end with /,should append it by yourself
-	UrlBase         = "https://api.leancloud.cn/1.1"
-	ClasssesUrlBase = UrlBase + "/classes"
-)
+func DetectDedicatedApiServer(appId string) (string, error) {
+	routerUrl := "https://app-router.leancloud.cn/2/route?appId=" + appId
+	resp, err := http.Get(routerUrl)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	type routerResult struct {
+		ApiServer       string `json:"api_server"`
+		EngineServer    string `json:"engine_server"`
+		PushServer      string `json:"push_server"`
+		RTMRouterServer string `json:"rtm_router_server"`
+		StatsServer     string `json:"stats_server"`
+		TTL             int    `json:"ttl"`
+	}
+	var result routerResult
+	if err := json.Unmarshal(body, &result); err != nil {
+		return "", err
+	}
+	return result.ApiServer, nil
+}
+
+func GetUrlBase() string {
+	return "https://" + apiServer + "/" + ApiVersion
+}

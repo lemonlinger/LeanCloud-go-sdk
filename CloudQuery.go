@@ -2,6 +2,7 @@ package lean
 
 import (
 	"encoding/json"
+
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -10,7 +11,7 @@ func (this *LeanClient) CloudQuery(cql string, pvalues ...interface{}) *Agent {
 		return nil
 	}
 
-	url := UrlBase + "/cloudQuery"
+	url := GetUrlBase() + "/cloudQuery"
 	request := gorequest.New()
 	superAgent := request.Get(url)
 	superAgent.QueryData.Add("cql", cql)

@@ -28,7 +28,7 @@ func (client *LeanClient) RequestMobilVerify(
 	verifyRequest RequestMobilePhoneVerify) error {
 
 	request := gorequest.New()
-	url := UrlBase + "/requestSmsCode"
+	url := GetUrlBase() + "/requestSmsCode"
 	superAgent := request.Post(url).
 		Set("X-LC-Id", client.appId).
 		Send(verifyRequest)
@@ -48,7 +48,7 @@ func (client *LeanClient) RequestMobilVerify(
 //verfiy the code
 func (client *LeanClient) VerifyCode(phone, code string) error {
 	request := gorequest.New()
-	url := UrlBase + "/verifySmsCode/" + code
+	url := GetUrlBase() + "/verifySmsCode/" + code
 	superAgent := request.Post(url).
 		Set("X-LC-Id", client.appId).
 		Query("mobilePhoneNumber=" + phone)

@@ -24,7 +24,7 @@ func (c *LeanClient) Login(userName, pwd string) (*User, error) {
 		"username": userName,
 		"password": pwd,
 	}
-	url := UrlBase + "/login"
+	url := GetUrlBase() + "/login"
 	request := gorequest.New()
 	superAgent := request.Post(url).
 		Send(requestBody)
@@ -44,7 +44,7 @@ func (c *LeanClient) Login(userName, pwd string) (*User, error) {
 
 //will return nil if there are any error
 func (c *LeanClient) UserMe(token string) (*User, error) {
-	url := UrlBase + "/users/me"
+	url := GetUrlBase() + "/users/me"
 	request := gorequest.New()
 	superAgent := request.Get(url)
 	agent := &Agent{
@@ -64,7 +64,7 @@ func (c *LeanClient) UserMe(token string) (*User, error) {
 }
 
 func (c *LeanClient) UserMeAll(token string, userWrapper interface{}) error {
-	url := UrlBase + "/users/me"
+	url := GetUrlBase() + "/users/me"
 	request := gorequest.New()
 	superAgent := request.Get(url)
 	agent := &Agent{
@@ -83,7 +83,7 @@ func (c *LeanClient) UserMeAll(token string, userWrapper interface{}) error {
 }
 
 func (c *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, error) {
-	url := UrlBase + "/usersByMobilePhone"
+	url := GetUrlBase() + "/usersByMobilePhone"
 	requestBody := map[string]string{
 		"mobilePhoneNumber": mobilePhone,
 		"smsCode":           smsCode,
@@ -105,7 +105,7 @@ func (c *LeanClient) UsersByMobilePhone(mobilePhone, smsCode string) (*User, err
 }
 
 func (c *LeanClient) UpdateUser(u User) error {
-	url := UrlBase + "/users/" + u.ObjectId
+	url := GetUrlBase() + "/users/" + u.ObjectId
 	requestBody := make(map[string]string)
 	if u.Passowrd != "" {
 		requestBody["password"] = u.Passowrd

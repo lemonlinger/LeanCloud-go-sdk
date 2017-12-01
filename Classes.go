@@ -21,7 +21,7 @@ func (this *LeanClient) Collection(collection string) Collection {
 //create an object
 func (this Collection) Create(obj interface{}, fetchWhenSave bool) *Agent {
 	request := gorequest.New()
-	classesUrl := UrlBase + this.classSubfix
+	classesUrl := GetUrlBase() + this.classSubfix
 	if fetchWhenSave {
 		classesUrl += "?fetchWhenSave=true"
 	}
@@ -35,7 +35,7 @@ func (this Collection) Create(obj interface{}, fetchWhenSave bool) *Agent {
 //get an object by objectId
 func (this Collection) GetObjectById(objectId string) *Agent {
 	request := gorequest.New()
-	classesUrl := UrlBase + this.classSubfix + "/" + objectId
+	classesUrl := GetUrlBase() + this.classSubfix + "/" + objectId
 	superAgent := request.Get(classesUrl)
 	return &Agent{
 		superAgent: superAgent,
@@ -46,7 +46,7 @@ func (this Collection) GetObjectById(objectId string) *Agent {
 //you can also specialfy the query parameter, if you don't provide the id, you will delete the objects by query
 func (this Collection) DeleteObjectById(objectId string) *QueryAgent {
 	request := gorequest.New()
-	classesUrl := UrlBase + this.classSubfix
+	classesUrl := GetUrlBase() + this.classSubfix
 	if "" != objectId {
 		classesUrl = classesUrl + "/" + objectId
 	}
@@ -60,7 +60,7 @@ func (this Collection) DeleteObjectById(objectId string) *QueryAgent {
 //you can also specialfy the query parameter, if you don't provide the id, you will update the object by query
 func (this Collection) UpdateObjectById(objectId string, obj interface{}) *UpdateAgent {
 	request := gorequest.New()
-	classesUrl := UrlBase + this.classSubfix
+	classesUrl := GetUrlBase() + this.classSubfix
 	if "" != objectId {
 		classesUrl = classesUrl + "/" + objectId
 	}
@@ -75,7 +75,7 @@ func (this Collection) UpdateObjectById(objectId string, obj interface{}) *Updat
 //leave cursor and key empty if they are empty
 func (this Collection) Scan(cursor, key string) *QueryAgent {
 	request := gorequest.New()
-	classesUrl := UrlBase + "/scan" + this.classSubfix
+	classesUrl := GetUrlBase() + "/scan" + this.classSubfix
 	superAgent := request.Get(classesUrl)
 	if "" != cursor {
 		superAgent.QueryData.Add("cursor", cursor)
@@ -94,7 +94,7 @@ func (this Collection) Scan(cursor, key string) *QueryAgent {
 
 func (this Collection) Query() *QueryAgent {
 	request := gorequest.New()
-	classesUrl := UrlBase + this.classSubfix
+	classesUrl := GetUrlBase() + this.classSubfix
 	superAgent := request.Get(classesUrl)
 	agent := Agent{
 		superAgent: superAgent,
